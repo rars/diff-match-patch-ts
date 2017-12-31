@@ -364,7 +364,7 @@ describe('DiffMatchPatch', () => {
     });
 
     it('should use linemode speedup for overlap line-mode', () => {
-      function diff_rebuildtexts(diffs): [string, string] {
+      function diff_rebuildtexts(diffs: Diff[]): [string, string] {
         // Construct the two texts which made up the diff originally.
         let text1 = '';
         let text2 = '';
