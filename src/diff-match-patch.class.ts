@@ -1,3 +1,30 @@
+/**
+ * DiffMatchPatch has been derived from diff_match_patch in diff-match-patch by Neil Fraser
+ * and the TypeScript of diffMatchPatch.ts in ng-diff-match-patch by Elliot Forbes.
+ * See LICENSE.md for licensing details.
+ *
+ * Changes have been made to correct tslint errors and use the Diff and DiffOp types
+ * by Richard Russell.
+ *
+ * ----------------------------------------------------------------------------------------
+ * Diff Match and Patch
+ *
+ * Copyright 2006 Google Inc.
+ * http://code.google.com/p/google-diff-match-patch/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { DiffOp } from './diff-op.enum';
 import { Diff } from './diff.type';
 import { PatchOperation } from './patch-operation.class';
@@ -713,6 +740,199 @@ export class DiffMatchPatch {
   }
 
   /**
+   * Determine the common prefix of two strings.
+   * @param {string} text1 First string.
+   * @param {string} text2 Second string.
+   * @return {number} The number of characters common to the start of each
+   *     string.
+   */
+  public diff_commonPrefix(
+      text1: string,
+      text2: string): number {
+    // Quick check for common null cases.
+    if (!text1 || !text2 || text1.charAt(0) !== text2.charAt(0)) {
+      return 0;
+    }
+    // Binary search.
+    // Performance analysis: http://neil.fraser.name/news/2007/10/09/
+    let pointermin = 0;
+    let pointermax = Math.min(text1.length, text2.length);
+    let pointermid = pointermax;
+    let pointerstart = 0;
+    while (pointermin < pointermid) {
+      if (text1.substring(pointerstart, pointermid) ===
+          text2.substring(pointerstart, pointermid)) {
+        pointermin = pointermid;
+        pointerstart = pointermin;
+      } else {
+        pointermax = pointermid;
+      }
+      pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
+    }
+    return pointermid;
+  }
+
+  /**
+   * Determine the common suffix of two strings.
+   * @param {string} text1 First string.
+   * @param {string} text2 Second string.
+   * @return {number} The number of characters common to the end of each string.
+   */
+  public diff_commonSuffix(
+      text1: string,
+      text2: string): number {
+    // Quick check for common null cases.
+    if (!text1 || !text2 ||
+        text1.charAt(text1.length - 1) !== text2.charAt(text2.length - 1)) {
+      return 0;
+    }
+    // Binary search.
+    // Performance analysis: http://neil.fraser.name/news/2007/10/09/
+    let pointermin = 0;
+    let pointermax = Math.min(text1.length, text2.length);
+    let pointermid = pointermax;
+    let pointerend = 0;
+    while (pointermin < pointermid) {
+      if (text1.substring(text1.length - pointermid, text1.length - pointerend) ===
+          text2.substring(text2.length - pointermid, text2.length - pointerend)) {
+        pointermin = pointermid;
+        pointerend = pointermin;
+      } else {
+        pointermax = pointermid;
+      }
+      pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
+    }
+    return pointermid;
+  }
+
+  /**
+   * Reorder and merge like edit sections.  Merge equalities.
+   * Any edit section can move as long as it doesn't cross an equality.
+   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
+   */
+  public diff_cleanupMerge(
+     diffs: Diff[]): void {
+    diffs.push([DiffOp.Equal, '']);  // Add a dummy entry at the end.
+    let pointer = 0;
+    let count_delete = 0;
+    let count_insert = 0;
+    let text_delete = '';
+    let text_insert = '';
+    let commonlength;
+    while (pointer < diffs.length) {
+      switch (diffs[pointer][0]) {
+        case DiffOp.Insert:
+          count_insert++;
+          text_insert += diffs[pointer][1];
+          pointer++;
+          break;
+        case DiffOp.Delete:
+          count_delete++;
+          text_delete += diffs[pointer][1];
+          pointer++;
+          break;
+        case DiffOp.Equal:
+          // Upon reaching an equality, check for prior redundancies.
+          if (count_delete + count_insert > 1) {
+            if (count_delete !== 0 && count_insert !== 0) {
+              // Factor out any common prefixies.
+              commonlength = this.diff_commonPrefix(text_insert, text_delete);
+              if (commonlength !== 0) {
+                if ((pointer - count_delete - count_insert) > 0 &&
+                    diffs[pointer - count_delete - count_insert - 1][0] ===
+                    DiffOp.Equal) {
+                  diffs[pointer - count_delete - count_insert - 1][1] +=
+                      text_insert.substring(0, commonlength);
+                } else {
+                  diffs.splice(0, 0, [DiffOp.Equal,
+                                      text_insert.substring(0, commonlength)]);
+                  pointer++;
+                }
+                text_insert = text_insert.substring(commonlength);
+                text_delete = text_delete.substring(commonlength);
+              }
+              // Factor out any common suffixies.
+              commonlength = this.diff_commonSuffix(text_insert, text_delete);
+              if (commonlength !== 0) {
+                diffs[pointer][1] = text_insert.substring(text_insert.length -
+                    commonlength) + diffs[pointer][1];
+                text_insert = text_insert.substring(0, text_insert.length -
+                    commonlength);
+                text_delete = text_delete.substring(0, text_delete.length -
+                    commonlength);
+              }
+            }
+            // Delete the offending records and add the merged ones.
+            if (count_delete === 0) {
+              diffs.splice(pointer - count_insert,
+                  count_delete + count_insert, [DiffOp.Insert, text_insert]);
+            } else if (count_insert === 0) {
+              diffs.splice(pointer - count_delete,
+                  count_delete + count_insert, [DiffOp.Delete, text_delete]);
+            } else {
+              diffs.splice(pointer - count_delete - count_insert,
+                  count_delete + count_insert, [DiffOp.Delete, text_delete],
+                  [DiffOp.Insert, text_insert]);
+            }
+            pointer = pointer - count_delete - count_insert +
+                      (count_delete ? 1 : 0) + (count_insert ? 1 : 0) + 1;
+          } else if (pointer !== 0 && diffs[pointer - 1][0] === DiffOp.Equal) {
+            // Merge this equality with the previous one.
+            diffs[pointer - 1][1] += diffs[pointer][1];
+            diffs.splice(pointer, 1);
+          } else {
+            pointer++;
+          }
+          count_insert = 0;
+          count_delete = 0;
+          text_delete = '';
+          text_insert = '';
+          break;
+      }
+    }
+    if (diffs[diffs.length - 1][1] === '') {
+      diffs.pop();  // Remove the dummy entry at the end.
+    }
+
+    // Second pass: look for single edits surrounded on both sides by equalities
+    // which can be shifted sideways to eliminate an equality.
+    // e.g: A<ins>BA</ins>C -> <ins>AB</ins>AC
+    let changes = false;
+    pointer = 1;
+    // Intentionally ignore the first and last element (don't need checking).
+    while (pointer < diffs.length - 1) {
+      if (diffs[pointer - 1][0] === DiffOp.Equal &&
+          diffs[pointer + 1][0] === DiffOp.Equal) {
+        // This is a single edit surrounded by equalities.
+        if (diffs[pointer][1].substring(diffs[pointer][1].length -
+            diffs[pointer - 1][1].length) === diffs[pointer - 1][1]) {
+          // Shift the edit over the previous equality.
+          diffs[pointer][1] = diffs[pointer - 1][1] +
+              diffs[pointer][1].substring(0, diffs[pointer][1].length -
+                                          diffs[pointer - 1][1].length);
+          diffs[pointer + 1][1] = diffs[pointer - 1][1] + diffs[pointer + 1][1];
+          diffs.splice(pointer - 1, 1);
+          changes = true;
+        } else if (diffs[pointer][1].substring(0, diffs[pointer + 1][1].length) ===
+            diffs[pointer + 1][1]) {
+          // Shift the edit over the next equality.
+          diffs[pointer - 1][1] += diffs[pointer + 1][1];
+          diffs[pointer][1] =
+              diffs[pointer][1].substring(diffs[pointer + 1][1].length) +
+              diffs[pointer + 1][1];
+          diffs.splice(pointer + 1, 1);
+          changes = true;
+        }
+      }
+      pointer++;
+    }
+    // If shifts were made, the diff needs reordering and another shift sweep.
+    if (changes) {
+      this.diff_cleanupMerge(diffs);
+    }
+  }
+
+  /**
    * Find the differences between two texts.  Assumes that the texts do not
    * have any common prefix or suffix.
    * @param {string} text1 Old string to be diffed.
@@ -1096,72 +1316,6 @@ export class DiffMatchPatch {
   }
 
   /**
-   * Determine the common prefix of two strings.
-   * @param {string} text1 First string.
-   * @param {string} text2 Second string.
-   * @return {number} The number of characters common to the start of each
-   *     string.
-   */
-  private diff_commonPrefix(
-      text1: string,
-      text2: string): number {
-    // Quick check for common null cases.
-    if (!text1 || !text2 || text1.charAt(0) !== text2.charAt(0)) {
-      return 0;
-    }
-    // Binary search.
-    // Performance analysis: http://neil.fraser.name/news/2007/10/09/
-    let pointermin = 0;
-    let pointermax = Math.min(text1.length, text2.length);
-    let pointermid = pointermax;
-    let pointerstart = 0;
-    while (pointermin < pointermid) {
-      if (text1.substring(pointerstart, pointermid) ===
-          text2.substring(pointerstart, pointermid)) {
-        pointermin = pointermid;
-        pointerstart = pointermin;
-      } else {
-        pointermax = pointermid;
-      }
-      pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
-    }
-    return pointermid;
-  }
-
-  /**
-   * Determine the common suffix of two strings.
-   * @param {string} text1 First string.
-   * @param {string} text2 Second string.
-   * @return {number} The number of characters common to the end of each string.
-   */
-  private diff_commonSuffix(
-      text1: string,
-      text2: string): number {
-    // Quick check for common null cases.
-    if (!text1 || !text2 ||
-        text1.charAt(text1.length - 1) !== text2.charAt(text2.length - 1)) {
-      return 0;
-    }
-    // Binary search.
-    // Performance analysis: http://neil.fraser.name/news/2007/10/09/
-    let pointermin = 0;
-    let pointermax = Math.min(text1.length, text2.length);
-    let pointermid = pointermax;
-    let pointerend = 0;
-    while (pointermin < pointermid) {
-      if (text1.substring(text1.length - pointermid, text1.length - pointerend) ===
-          text2.substring(text2.length - pointermid, text2.length - pointerend)) {
-        pointermin = pointermid;
-        pointerend = pointermin;
-      } else {
-        pointermax = pointermid;
-      }
-      pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
-    }
-    return pointermid;
-  }
-
-  /**
    * Determine if the suffix of one string is the prefix of another.
    * @param {string} text1 First string.
    * @param {string} text2 Second string.
@@ -1447,133 +1601,6 @@ export class DiffMatchPatch {
         }
       }
       pointer++;
-    }
-  }
-
-  /**
-   * Reorder and merge like edit sections.  Merge equalities.
-   * Any edit section can move as long as it doesn't cross an equality.
-   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
-   */
-  private diff_cleanupMerge(
-      diffs: Diff[]): void {
-    diffs.push([DiffOp.Equal, '']);  // Add a dummy entry at the end.
-    let pointer = 0;
-    let count_delete = 0;
-    let count_insert = 0;
-    let text_delete = '';
-    let text_insert = '';
-    let commonlength;
-    while (pointer < diffs.length) {
-      switch (diffs[pointer][0]) {
-        case DiffOp.Insert:
-          count_insert++;
-          text_insert += diffs[pointer][1];
-          pointer++;
-          break;
-        case DiffOp.Delete:
-          count_delete++;
-          text_delete += diffs[pointer][1];
-          pointer++;
-          break;
-        case DiffOp.Equal:
-          // Upon reaching an equality, check for prior redundancies.
-          if (count_delete + count_insert > 1) {
-            if (count_delete !== 0 && count_insert !== 0) {
-              // Factor out any common prefixies.
-              commonlength = this.diff_commonPrefix(text_insert, text_delete);
-              if (commonlength !== 0) {
-                if ((pointer - count_delete - count_insert) > 0 &&
-                    diffs[pointer - count_delete - count_insert - 1][0] ===
-                    DiffOp.Equal) {
-                  diffs[pointer - count_delete - count_insert - 1][1] +=
-                      text_insert.substring(0, commonlength);
-                } else {
-                  diffs.splice(0, 0, [DiffOp.Equal,
-                                      text_insert.substring(0, commonlength)]);
-                  pointer++;
-                }
-                text_insert = text_insert.substring(commonlength);
-                text_delete = text_delete.substring(commonlength);
-              }
-              // Factor out any common suffixies.
-              commonlength = this.diff_commonSuffix(text_insert, text_delete);
-              if (commonlength !== 0) {
-                diffs[pointer][1] = text_insert.substring(text_insert.length -
-                    commonlength) + diffs[pointer][1];
-                text_insert = text_insert.substring(0, text_insert.length -
-                    commonlength);
-                text_delete = text_delete.substring(0, text_delete.length -
-                    commonlength);
-              }
-            }
-            // Delete the offending records and add the merged ones.
-            if (count_delete === 0) {
-              diffs.splice(pointer - count_insert,
-                  count_delete + count_insert, [DiffOp.Insert, text_insert]);
-            } else if (count_insert === 0) {
-              diffs.splice(pointer - count_delete,
-                  count_delete + count_insert, [DiffOp.Delete, text_delete]);
-            } else {
-              diffs.splice(pointer - count_delete - count_insert,
-                  count_delete + count_insert, [DiffOp.Delete, text_delete],
-                  [DiffOp.Insert, text_insert]);
-            }
-            pointer = pointer - count_delete - count_insert +
-                      (count_delete ? 1 : 0) + (count_insert ? 1 : 0) + 1;
-          } else if (pointer !== 0 && diffs[pointer - 1][0] === DiffOp.Equal) {
-            // Merge this equality with the previous one.
-            diffs[pointer - 1][1] += diffs[pointer][1];
-            diffs.splice(pointer, 1);
-          } else {
-            pointer++;
-          }
-          count_insert = 0;
-          count_delete = 0;
-          text_delete = '';
-          text_insert = '';
-          break;
-      }
-    }
-    if (diffs[diffs.length - 1][1] === '') {
-      diffs.pop();  // Remove the dummy entry at the end.
-    }
-
-    // Second pass: look for single edits surrounded on both sides by equalities
-    // which can be shifted sideways to eliminate an equality.
-    // e.g: A<ins>BA</ins>C -> <ins>AB</ins>AC
-    let changes = false;
-    pointer = 1;
-    // Intentionally ignore the first and last element (don't need checking).
-    while (pointer < diffs.length - 1) {
-      if (diffs[pointer - 1][0] === DiffOp.Equal &&
-          diffs[pointer + 1][0] === DiffOp.Equal) {
-        // This is a single edit surrounded by equalities.
-        if (diffs[pointer][1].substring(diffs[pointer][1].length -
-            diffs[pointer - 1][1].length) === diffs[pointer - 1][1]) {
-          // Shift the edit over the previous equality.
-          diffs[pointer][1] = diffs[pointer - 1][1] +
-              diffs[pointer][1].substring(0, diffs[pointer][1].length -
-                                          diffs[pointer - 1][1].length);
-          diffs[pointer + 1][1] = diffs[pointer - 1][1] + diffs[pointer + 1][1];
-          diffs.splice(pointer - 1, 1);
-          changes = true;
-        } else if (diffs[pointer][1].substring(0, diffs[pointer + 1][1].length) ===
-            diffs[pointer + 1][1]) {
-          // Shift the edit over the next equality.
-          diffs[pointer - 1][1] += diffs[pointer + 1][1];
-          diffs[pointer][1] =
-              diffs[pointer][1].substring(diffs[pointer + 1][1].length) +
-              diffs[pointer + 1][1];
-          diffs.splice(pointer + 1, 1);
-          changes = true;
-        }
-      }
-      pointer++;
-    }
-    // If shifts were made, the diff needs reordering and another shift sweep.
-    if (changes) {
-      this.diff_cleanupMerge(diffs);
     }
   }
 
