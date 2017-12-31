@@ -7,9 +7,11 @@
   "jsnext:main": "diff-match-patch-ts.module.js",
   "types": "diff-match-patch-ts.module.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/diffMatchPatch.js > dist/diff-match-patch-ts.bundle.js && cp package.json dist && cp README.md dist && cp LICENSE.md dist",
+    "build": "rm -rf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/index.js > dist/diff-match-patch-ts.bundle.js && cp package.json dist && cp README.md dist && cp LICENSE.md dist",
     "test": "karma start --single-run",
-    "npmpublish": "cd dist && npm publish"
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "npmpublish": "cd dist && npm publish",
+    "commitmsg": "commitlint -e $GIT_PARAMS"
   },
   "repository": {
     "type": "git",
@@ -28,10 +30,14 @@
   "homepage": "https://github.com/rars/diff-match-patch-ts#readme",
   "peerDependencies": {},
   "devDependencies": {
+    "@commitlint/cli": "^5.2.8",
+    "@commitlint/config-conventional": "^5.2.3",
     "@types/jasmine": "^2.5.53",
     "@types/jsdom": "^11.0.1",
     "@types/node": "^8.0.13",
     "core-js": "^2.4.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.3",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.4",
     "jsdom": "^9.12.0",
@@ -45,7 +51,13 @@
     "rollup": "^0.45.1",
     "ts-loader": "^2.2.2",
     "ts-node": "^3.2.0",
+    "tslint": "^5.5.0",
     "typescript": "^2.4.1",
     "webpack": "^3.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

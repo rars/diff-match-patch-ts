@@ -12,7 +12,7 @@
     "noStrictGenericChecks": true
   },
   "files": [
-    "./src/diffMatchPatch.ts"
+    "./src/index.ts"
   ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": true
