@@ -7,8 +7,9 @@
   "jsnext:main": "diff-match-patch-ts.module.js",
   "types": "diff-match-patch-ts.module.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/diffMatchPatch.js > dist/diff-match-patch-ts.bundle.js && cp package.json dist && cp README.md dist && cp LICENSE.md dist",
+    "build": "rm -rf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/index.js > dist/diff-match-patch-ts.bundle.js && cp package.json dist && cp README.md dist && cp LICENSE.md dist",
     "test": "karma start --single-run",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "npmpublish": "cd dist && npm publish",
     "commitmsg": "commitlint -e $GIT_PARAMS"
   },
@@ -50,6 +51,7 @@
     "rollup": "^0.45.1",
     "ts-loader": "^2.2.2",
     "ts-node": "^3.2.0",
+    "tslint": "^5.5.0",
     "typescript": "^2.4.1",
     "webpack": "^3.2.0"
   },

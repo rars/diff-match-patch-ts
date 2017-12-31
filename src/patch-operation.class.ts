@@ -7,13 +7,11 @@ import { Diff } from './diff.type';
  */
 export class PatchOperation {
 
-  constructor() {  }
-
-  diffs: Array<Diff> = [];
-  start1: number = null;
-  start2: number = null;
-  length1: number = 0;
-  length2: number = 0;
+  public diffs: Diff[] = [];
+  public start1: number = null;
+  public start2: number = null;
+  public length1: number = 0;
+  public length2: number = 0;
 
   /**
    * Emmulate GNU diff's format.
@@ -21,7 +19,8 @@ export class PatchOperation {
    * Indicies are printed as 1-based, not 0-based.
    */
   public toString(): string {
-    let coords1, coords2;
+    let coords1;
+    let coords2;
     if (this.length1 === 0) {
       coords1 = this.start1 + ',0';
     } else if (this.length1 === 1) {
