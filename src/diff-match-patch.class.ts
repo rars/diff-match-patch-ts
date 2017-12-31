@@ -933,6 +933,38 @@ export class DiffMatchPatch {
   }
 
   /**
+   * Compute and return the source text (all equalities and deletions).
+   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
+   * @return {string} Source text.
+   */
+  public diff_text1(
+      diffs: Diff[]): string {
+    const text = [];
+    for (let x = 0; x < diffs.length; x++) {
+      if (diffs[x][0] !== DiffOp.Insert) {
+        text[x] = diffs[x][1];
+      }
+    }
+    return text.join('');
+  }
+
+  /**
+   * Compute and return the destination text (all equalities and insertions).
+   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
+   * @return {string} Destination text.
+   */
+  public diff_text2(
+      diffs: Diff[]): string {
+    const text = [];
+    for (let x = 0; x < diffs.length; x++) {
+      if (diffs[x][0] !== DiffOp.Delete) {
+        text[x] = diffs[x][1];
+      }
+    }
+    return text.join('');
+  }
+
+  /**
    * Find the differences between two texts.  Assumes that the texts do not
    * have any common prefix or suffix.
    * @param {string} text1 Old string to be diffed.
@@ -1639,38 +1671,6 @@ export class DiffMatchPatch {
     }
     // Add the remaining character length.
     return last_chars2 + (loc - last_chars1);
-  }
-
-  /**
-   * Compute and return the source text (all equalities and deletions).
-   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
-   * @return {string} Source text.
-   */
-  private diff_text1(
-      diffs: Diff[]): string {
-    const text = [];
-    for (let x = 0; x < diffs.length; x++) {
-      if (diffs[x][0] !== DiffOp.Insert) {
-        text[x] = diffs[x][1];
-      }
-    }
-    return text.join('');
-  }
-
-  /**
-   * Compute and return the destination text (all equalities and insertions).
-   * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
-   * @return {string} Destination text.
-   */
-  private diff_text2(
-      diffs: Diff[]): string {
-    const text = [];
-    for (let x = 0; x < diffs.length; x++) {
-      if (diffs[x][0] !== DiffOp.Delete) {
-        text[x] = diffs[x][1];
-      }
-    }
-    return text.join('');
   }
 
   /**
