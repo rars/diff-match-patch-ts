@@ -965,6 +965,21 @@ export class DiffMatchPatch {
   }
 
   /**
+   * Compute and return a line-mode diff.
+   * @param {string} text1 Old string to be diffed.
+   * @param {string} text2 New string to be diffed.
+   * @return {!Array.<!diff_match_patch.Diff>} Array of diff tuples.
+   */
+  public diff_lineMode(
+      text1: string,
+      text2: string): Diff[] {
+    const encodedStrings = this.diff_linesToChars_(text1, text2);
+    const diffs = this.diff_main(encodedStrings.chars1, encodedStrings.chars2, false);
+    this.diff_charsToLines_(diffs, encodedStrings.lineArray);
+    return diffs;
+  }
+
+  /**
    * Find the differences between two texts.  Assumes that the texts do not
    * have any common prefix or suffix.
    * @param {string} text1 Old string to be diffed.
