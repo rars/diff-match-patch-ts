@@ -10,6 +10,7 @@
     "build": "rm -rf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/index.js > dist/diff-match-patch-ts.bundle.js && cp package.json dist && cp README.md dist && cp LICENSE.md dist",
     "test": "karma start --single-run",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "release": "standard-version",
     "npmpublish": "cd dist && npm publish",
     "commitmsg": "commitlint -e $GIT_PARAMS"
   },
@@ -49,6 +50,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.4",
     "rollup": "^0.45.1",
+    "standard-version": "^4.2.0",
     "ts-loader": "^2.2.2",
     "ts-node": "^3.2.0",
     "tslint": "^5.5.0",
