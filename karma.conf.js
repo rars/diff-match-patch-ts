@@ -20,7 +20,7 @@ module.exports = function(config) {
         extensions: ['.js', '.ts']
       },
       module: {
-        loaders: [
+        rules: [
           {
             test: /\.ts(x?)$/,
             loader: 'ts-loader'
