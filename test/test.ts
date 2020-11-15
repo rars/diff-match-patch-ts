@@ -1,5 +1,5 @@
-import 'core-js/es6';
-import 'core-js/es7/reflect';
+import 'core-js/es';
+import 'core-js/es/reflect';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
 declare const __karma__: any;
