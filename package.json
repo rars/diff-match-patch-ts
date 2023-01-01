@@ -47,14 +47,14 @@
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.5.4",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^4.0.2",
+    "karma-webpack": "^5.0.0",
     "rollup": "^0.45.1",
     "standard-version": "^9.3.2",
     "ts-loader": "^8.0.11",
     "ts-node": "^9.0.0",
     "tslint": "^5.5.0",
     "typescript": "^4.0.5",
-    "webpack": "^4.44.2"
+    "webpack": "^5.75.0"
   },
   "config": {
     "commitizen": {
