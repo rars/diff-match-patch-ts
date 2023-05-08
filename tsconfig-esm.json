@@ -11,7 +11,6 @@
     "noImplicitAny": true,
     "outDir": "./dist",
     "lib": ["es2015", "dom"],
-    "noStrictGenericChecks": true
   },
   "files": [
     "./src/index.ts"
