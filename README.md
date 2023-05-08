@@ -1,6 +1,6 @@
 # diff-match-patch-ts
 
-[![Build Status](https://travis-ci.org/rars/diff-match-patch-ts.svg?branch=master)](https://travis-ci.org/rars/diff-match-patch-ts)
+[![Node.js CI](https://github.com/rars/diff-match-patch-ts/actions/workflows/node.js.yml/badge.svg)](https://github.com/rars/diff-match-patch-ts/actions/workflows/node.js.yml)
 
 A port of diff-match-patch (https://code.google.com/p/google-diff-match-patch/) to TypeScript.
 
