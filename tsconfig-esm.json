@@ -1,18 +1,7 @@
 {
+  "extends": "./tsconfig.base",
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "sourceMap": true,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "stripInternal": true,
-    "declaration": true,
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "lib": ["es2015", "dom"],
-  },
-  "files": [
-    "./src/index.ts"
-  ]
+    "stripInternal": true
+  }
 }
