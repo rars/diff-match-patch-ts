@@ -1,6 +1,6 @@
 {
   "name": "diff-match-patch-ts",
-  "version": "0.2.1-rc.0",
+  "version": "0.3.0",
   "description": "Port of diff-match-patch to TypeScript.",
   "main": "diff-match-patch-ts.bundle.js",
   "module": "diff-match-patch-ts.module.js",
