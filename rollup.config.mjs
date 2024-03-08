@@ -1,14 +1,19 @@
-export default {
-  output: {
-    format: "umd",
-    name: "diff-match-patch-ts",
+import pkg from "./package.json" with { type: "json" };
+
+import typescript from "@rollup/plugin-typescript";
+
+export default [
+  {
+    input: "src/index.ts",
+    output: { name: "diff-match-patch-ts", file: `dist/${pkg.browser}`, format: "umd", sourcemap: true },
+    plugins: [typescript({ tsconfig: "./tsconfig.json" })],
   },
-  external: [],
-  onwarn: (warning) => {
-    const skip_codes = ["THIS_IS_UNDEFINED", "MISSING_GLOBAL_NAME"];
-    if (skip_codes.indexOf(warning.code) != -1) {
-      return;
-    }
-    console.error(warning);
+  {
+    input: "src/index.ts",
+    output: [
+      { file: `dist/${pkg.main}`, format: "cjs", sourcemap: true },
+      { file: `dist/${pkg.module}`, format: "es", sourcemap: true },
+    ],
+    plugins: [typescript({ tsconfig: "./tsconfig.json" })],
   },
-};
+];
