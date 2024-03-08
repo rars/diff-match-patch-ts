@@ -1,6 +1,12 @@
 {
-  "extends": "./tsconfig.base",
-  "angularCompilerOptions": {
-    "skipTemplateCodegen": true
-  }
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "./dist",
+    "noImplicitAny": true,
+    "lib": ["es6"]
+  },
+  "files": ["./src/index.ts"]
 }
