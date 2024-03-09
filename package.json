@@ -1,8 +1,17 @@
 {
   "name": "diff-match-patch-ts",
-  "version": "0.4.0-rc.0",
+  "version": "0.4.0-rc.1",
   "description": "Port of diff-match-patch to TypeScript.",
-  "type": "module",
+  "exports": {
+    "import": {
+      "types": "./index.d.mts",
+      "default": "./diff-match-patch-ts.mjs"
+    },
+    "require": {
+      "types": "./index.d.ts",
+      "default": "./diff-match-patch-ts.cjs"
+    }
+  },
   "main": "diff-match-patch-ts.cjs",
   "module": "diff-match-patch-ts.mjs",
   "browser": "diff-match-patch-ts.umd.js",
@@ -50,6 +59,7 @@
     "jasmine-core": "^5.1.2",
     "jest": "^29.7.0",
     "jsdom": "^24.0.0",
+    "prettier": "^3.2.5",
     "rimraf": "^5.0.0",
     "rollup": "^4.12.1",
     "standard-version": "^9.3.2",
