@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/rars/diff-match-patch-ts/compare/v0.3.0...v0.4.0) (2024-03-10)
+
+
+### Bug Fixes
+
+* **diff-match-patch-ts:** update packaging for cleaner es/commonjs/umd split fixing issue with vite bundling ([58190f4](https://github.com/rars/diff-match-patch-ts/commit/58190f4f93cdb69b4c5a8512ec72ca54672d6435))
+
 ## [0.3.0](https://github.com/rars/diff-match-patch-ts/compare/v0.2.0...v0.3.0) (2023-05-09)
 
 
