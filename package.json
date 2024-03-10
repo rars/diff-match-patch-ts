@@ -72,5 +72,12 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true,
+      "bump": true
+    }
   }
 }
