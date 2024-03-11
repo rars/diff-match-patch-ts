@@ -4,22 +4,20 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.4.0](https://github.com/rars/diff-match-patch-ts/compare/v0.3.0...v0.4.0) (2024-03-10)
 
-
 ### Bug Fixes
 
-* **diff-match-patch-ts:** update packaging for cleaner es/commonjs/umd split fixing issue with vite bundling ([58190f4](https://github.com/rars/diff-match-patch-ts/commit/58190f4f93cdb69b4c5a8512ec72ca54672d6435))
+- **diff-match-patch-ts:** update packaging for cleaner es/commonjs/umd split fixing issue with vite bundling ([58190f4](https://github.com/rars/diff-match-patch-ts/commit/58190f4f93cdb69b4c5a8512ec72ca54672d6435))
 
 ## [0.3.0](https://github.com/rars/diff-match-patch-ts/compare/v0.2.0...v0.3.0) (2023-05-09)
 
-
 ### Features
 
-* **diff-match-patch-ts:** change target to es6 ([6e20c82](https://github.com/rars/diff-match-patch-ts/commit/6e20c82b696652d12d7345ccf8f158e54c82afe3))
+- **diff-match-patch-ts:** change target to es6 ([6e20c82](https://github.com/rars/diff-match-patch-ts/commit/6e20c82b696652d12d7345ccf8f158e54c82afe3))
 
 <a name="0.2.0"></a>
-# [0.2.0](https://github.com/rars/diff-match-patch-ts/compare/0.1.0...0.2.0) (2018-01-01)
 
+# [0.2.0](https://github.com/rars/diff-match-patch-ts/compare/0.1.0...0.2.0) (2018-01-01)
 
 ### Features
 
-* **diff-match-patch.class.ts:** add diff_lineMode method ([7b20252](https://github.com/rars/diff-match-patch-ts/commit/7b20252))
+- **diff-match-patch.class.ts:** add diff_lineMode method ([7b20252](https://github.com/rars/diff-match-patch-ts/commit/7b20252))
