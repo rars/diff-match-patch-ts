@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/rars/diff-match-patch-ts/compare/v0.4.0...v0.5.0) (2024-03-11)
+
+### Bug Fixes
+
+- **diff-match-patch-ts:** remove const from `DiffOp` enum ([1393b8e](https://github.com/rars/diff-match-patch-ts/commit/1393b8e439f90715aca07a82349830898475484e))
+
 ## [0.4.0](https://github.com/rars/diff-match-patch-ts/compare/v0.3.0...v0.4.0) (2024-03-10)
 
 ### Bug Fixes
