@@ -4,7 +4,7 @@
   "description": "Port of diff-match-patch to TypeScript.",
   "exports": {
     "import": {
-      "types": "./index.d.mts",
+      "types": "./index.d.ts",
       "default": "./diff-match-patch-ts.mjs"
     },
     "require": {
