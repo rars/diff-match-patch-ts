@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/rars/diff-match-patch-ts/compare/v0.5.0...v0.5.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **diff-match-patch-ts:** use correct types declaration extension in package.json ([dc9c9f6](https://github.com/rars/diff-match-patch-ts/commit/dc9c9f6bef71e5ea3c99d10c9d9b5777f30a0f4e))
+
 ## [0.5.0](https://github.com/rars/diff-match-patch-ts/compare/v0.4.0...v0.5.0) (2024-03-11)
 
 ### Bug Fixes
