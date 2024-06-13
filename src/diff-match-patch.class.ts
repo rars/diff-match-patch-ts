@@ -457,8 +457,8 @@ export class DiffMatchPatch {
    */
   public patch_make(
     a: string | Diff[],
-    opt_b: string | Diff[] | undefined,
-    opt_c: string | Diff[] | undefined,
+    opt_b?: string | Diff[],
+    opt_c?: string | Diff[],
   ): PatchOperation[] {
     let text1;
     let diffs;
