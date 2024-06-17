@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - **diff-match-patch-ts:** make `opt_b` and `opt_c` in `patch_make` optional arguments ([98bbb2f](https://github.com/rars/diff-match-patch-ts/commit/98bbb2f323929f9c8bf1636191c163fc54b00830))
 
-### [0.5.1](https://github.com/rars/diff-match-patch-ts/compare/v0.5.0...v0.5.1) (2024-04-17)
+## [0.5.1](https://github.com/rars/diff-match-patch-ts/compare/v0.5.0...v0.5.1) (2024-04-17)
 
 ### Bug Fixes
 
@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 <a name="0.2.0"></a>
 
-# [0.2.0](https://github.com/rars/diff-match-patch-ts/compare/0.1.0...0.2.0) (2018-01-01)
+## [0.2.0](https://github.com/rars/diff-match-patch-ts/compare/0.1.0...0.2.0) (2018-01-01)
 
 ### Features
 
