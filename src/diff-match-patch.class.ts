@@ -778,7 +778,7 @@ export class DiffMatchPatch {
         let line: string;
         try {
           line = decodeURI(text[textPointer].substring(1));
-        } catch (ex) {
+        } catch (_ex) {
           // Malformed URI sequence.
           throw new Error('Illegal escape in patch_fromText: ' + line);
         }
@@ -1874,7 +1874,7 @@ export class DiffMatchPatch {
         case '+': {
           try {
             diffs[diffsLength++] = [DiffOp.Insert, decodeURI(param)];
-          } catch (ex) {
+          } catch (_ex) {
             // Malformed URI sequence.
             throw new Error('Illegal escape in diff_fromDelta: ' + param);
           }
