@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/rars/diff-match-patch-ts/compare/v0.7.0...v0.8.0) (2025-12-01)
+
+### Refactoring
+
+- **diff-match-patch-ts**: use strict tsconfig setting ([f948143](https://github.com/rars/diff-match-patch-ts/commit/f948143b686b12441d997c45a6012c2e15631b24))
+
 ## [0.7.0](https://github.com/rars/diff-match-patch-ts/compare/v0.6.0...v0.7.0) (2025-11-04)
 
 - Maintenance release updating dependencies.
