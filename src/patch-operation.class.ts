@@ -33,12 +33,28 @@ import { Diff } from './diff.type';
  * @constructor
  */
 export class PatchOperation {
-
   public diffs: Diff[] = [];
-  public start1: number = null;
-  public start2: number = null;
   public length1: number = 0;
   public length2: number = 0;
+
+  public constructor(
+    public start1: number,
+    public start2: number,
+  ) {}
+
+  public clone(): PatchOperation {
+    const patchCopy = new PatchOperation(this.start1, this.start2);
+
+    patchCopy.diffs = [];
+    for (let i = 0; i < this.diffs.length; i++) {
+      patchCopy.diffs[i] = [this.diffs[i][0], this.diffs[i][1]];
+    }
+
+    patchCopy.length1 = this.length1;
+    patchCopy.length2 = this.length2;
+
+    return patchCopy;
+  }
 
   /**
    * Emmulate GNU diff's format.
@@ -46,23 +62,23 @@ export class PatchOperation {
    * Indicies are printed as 1-based, not 0-based.
    */
   public toString(): string {
-    let coords1;
-    let coords2;
+    let coords1: string | number;
+    let coords2: string | number;
     if (this.length1 === 0) {
       coords1 = this.start1 + ',0';
     } else if (this.length1 === 1) {
       coords1 = this.start1 + 1;
     } else {
-      coords1 = (this.start1 + 1) + ',' + this.length1;
+      coords1 = `${this.start1 + 1},${this.length1}`;
     }
     if (this.length2 === 0) {
       coords2 = this.start2 + ',0';
     } else if (this.length2 === 1) {
       coords2 = this.start2 + 1;
     } else {
-      coords2 = (this.start2 + 1) + ',' + this.length2;
+      coords2 = `${this.start2 + 1},${this.length2}`;
     }
-    const text = ['@@ -' + coords1 + ' +' + coords2 + ' @@\n'];
+    const text = [`@@ -${coords1} +${coords2} @@\n`];
     let op;
     // Escape the body of the patch with %xx notation.
     for (let x = 0; x < this.diffs.length; x++) {

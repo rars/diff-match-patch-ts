@@ -1,6 +1,6 @@
 {
   "name": "diff-match-patch-ts",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Port of diff-match-patch to TypeScript.",
   "exports": {
     "import": {

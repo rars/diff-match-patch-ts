@@ -63,7 +63,7 @@ describe('DiffMatchPatch', () => {
   });
 
   describe('diff_cleanupMerge()', () => {
-    let diffs: Diff[];
+    let diffs: Diff[] | undefined;
 
     beforeEach(() => {
       diffs = undefined;
@@ -76,25 +76,45 @@ describe('DiffMatchPatch', () => {
     });
 
     it('should cleanup a messy diff (no change case)', () => {
-      diffs = [[DiffOp.Equal, 'a'], [DiffOp.Delete, 'b'], [DiffOp.Insert, 'c']];
+      diffs = [
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, 'b'],
+        [DiffOp.Insert, 'c'],
+      ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Equal, 'a'], [DiffOp.Delete, 'b'], [DiffOp.Insert, 'c']]);
+      expect(diffs).toEqual([
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, 'b'],
+        [DiffOp.Insert, 'c'],
+      ]);
     });
 
     it('should merge equalities in a messy diff', () => {
-      diffs = [[DiffOp.Equal, 'a'], [DiffOp.Equal, 'b'], [DiffOp.Equal, 'c']];
+      diffs = [
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Equal, 'b'],
+        [DiffOp.Equal, 'c'],
+      ];
       dmp.diff_cleanupMerge(diffs);
       expect(diffs).toEqual([[DiffOp.Equal, 'abc']]);
     });
 
     it('should merge deletions in a messy diff', () => {
-      diffs = [[DiffOp.Delete, 'a'], [DiffOp.Delete, 'b'], [DiffOp.Delete, 'c']];
+      diffs = [
+        [DiffOp.Delete, 'a'],
+        [DiffOp.Delete, 'b'],
+        [DiffOp.Delete, 'c'],
+      ];
       dmp.diff_cleanupMerge(diffs);
       expect(diffs).toEqual([[DiffOp.Delete, 'abc']]);
     });
 
     it('should merge insertions in a messy diff', () => {
-      diffs = [[DiffOp.Insert, 'a'], [DiffOp.Insert, 'b'], [DiffOp.Insert, 'c']];
+      diffs = [
+        [DiffOp.Insert, 'a'],
+        [DiffOp.Insert, 'b'],
+        [DiffOp.Insert, 'c'],
+      ];
       dmp.diff_cleanupMerge(diffs);
       expect(diffs).toEqual([[DiffOp.Insert, 'abc']]);
     });
@@ -106,16 +126,29 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Delete, 'c'],
         [DiffOp.Insert, 'd'],
         [DiffOp.Equal, 'e'],
-        [DiffOp.Equal, 'f']
+        [DiffOp.Equal, 'f'],
       ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Delete, 'ac'], [DiffOp.Insert, 'bd'], [DiffOp.Equal, 'ef']]);
+      expect(diffs).toEqual([
+        [DiffOp.Delete, 'ac'],
+        [DiffOp.Insert, 'bd'],
+        [DiffOp.Equal, 'ef'],
+      ]);
     });
 
     it('should adjust for common prefix/suffix strings', () => {
-      diffs = [[DiffOp.Delete, 'a'], [DiffOp.Insert, 'abc'], [DiffOp.Delete, 'dc']];
+      diffs = [
+        [DiffOp.Delete, 'a'],
+        [DiffOp.Insert, 'abc'],
+        [DiffOp.Delete, 'dc'],
+      ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Equal, 'a'], [DiffOp.Delete, 'd'], [DiffOp.Insert, 'b'], [DiffOp.Equal, 'c']]);
+      expect(diffs).toEqual([
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, 'd'],
+        [DiffOp.Insert, 'b'],
+        [DiffOp.Equal, 'c'],
+      ]);
     });
 
     it('should adjust for common prefix/suffix strings with equalities', () => {
@@ -124,22 +157,41 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Delete, 'a'],
         [DiffOp.Insert, 'abc'],
         [DiffOp.Delete, 'dc'],
-        [DiffOp.Equal, 'y']
+        [DiffOp.Equal, 'y'],
       ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Equal, 'xa'], [DiffOp.Delete, 'd'], [DiffOp.Insert, 'b'], [DiffOp.Equal, 'cy']]);
+      expect(diffs).toEqual([
+        [DiffOp.Equal, 'xa'],
+        [DiffOp.Delete, 'd'],
+        [DiffOp.Insert, 'b'],
+        [DiffOp.Equal, 'cy'],
+      ]);
     });
 
     it('should slide edits left', () => {
-      diffs = [[DiffOp.Equal, 'a'], [DiffOp.Insert, 'ba'], [DiffOp.Equal, 'c']];
+      diffs = [
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Insert, 'ba'],
+        [DiffOp.Equal, 'c'],
+      ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Insert, 'ab'], [DiffOp.Equal, 'ac']]);
+      expect(diffs).toEqual([
+        [DiffOp.Insert, 'ab'],
+        [DiffOp.Equal, 'ac'],
+      ]);
     });
 
     it('should slide edits right', () => {
-      diffs = [[DiffOp.Equal, 'c'], [DiffOp.Insert, 'ab'], [DiffOp.Equal, 'a']];
+      diffs = [
+        [DiffOp.Equal, 'c'],
+        [DiffOp.Insert, 'ab'],
+        [DiffOp.Equal, 'a'],
+      ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Equal, 'ca'], [DiffOp.Insert, 'ba']]);
+      expect(diffs).toEqual([
+        [DiffOp.Equal, 'ca'],
+        [DiffOp.Insert, 'ba'],
+      ]);
     });
 
     it('should slide edits left recursively', () => {
@@ -148,10 +200,13 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Delete, 'b'],
         [DiffOp.Equal, 'c'],
         [DiffOp.Delete, 'ac'],
-        [DiffOp.Equal, 'x']
+        [DiffOp.Equal, 'x'],
       ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Delete, 'abc'], [DiffOp.Equal, 'acx']]);
+      expect(diffs).toEqual([
+        [DiffOp.Delete, 'abc'],
+        [DiffOp.Equal, 'acx'],
+      ]);
     });
 
     it('should slide edits right recursively', () => {
@@ -160,10 +215,13 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Delete, 'ca'],
         [DiffOp.Equal, 'c'],
         [DiffOp.Delete, 'b'],
-        [DiffOp.Equal, 'a']
+        [DiffOp.Equal, 'a'],
       ];
       dmp.diff_cleanupMerge(diffs);
-      expect(diffs).toEqual([[DiffOp.Equal, 'xca'], [DiffOp.Delete, 'cba']]);
+      expect(diffs).toEqual([
+        [DiffOp.Equal, 'xca'],
+        [DiffOp.Delete, 'cba'],
+      ]);
     });
   });
 
@@ -176,7 +234,7 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Equal, ' over '],
         [DiffOp.Delete, 'the'],
         [DiffOp.Insert, 'a'],
-        [DiffOp.Equal, ' lazy']
+        [DiffOp.Equal, ' lazy'],
       ];
       expect(dmp.diff_text1(diffs)).toBe('jumps over the lazy');
     });
@@ -191,7 +249,7 @@ describe('DiffMatchPatch', () => {
         [DiffOp.Equal, ' over '],
         [DiffOp.Delete, 'the'],
         [DiffOp.Insert, 'a'],
-        [DiffOp.Equal, ' lazy']
+        [DiffOp.Equal, ' lazy'],
       ];
       expect(dmp.diff_text2(diffs)).toBe('jumped over a lazy');
     });
@@ -203,123 +261,142 @@ describe('DiffMatchPatch', () => {
     });
 
     it('should perform a trivial equality diff', () => {
-      expect(dmp.diff_main('abc', 'abc', false)).toEqual([[DiffOp.Equal, 'abc']]);
+      expect(dmp.diff_main('abc', 'abc', false)).toEqual([
+        [DiffOp.Equal, 'abc'],
+      ]);
     });
 
     it('should perform a trivial insertion diff', () => {
-      expect(dmp.diff_main('abc', 'ab123c', false)).toEqual(
-        [[DiffOp.Equal, 'ab'], [DiffOp.Insert, '123'], [DiffOp.Equal, 'c']]);
+      expect(dmp.diff_main('abc', 'ab123c', false)).toEqual([
+        [DiffOp.Equal, 'ab'],
+        [DiffOp.Insert, '123'],
+        [DiffOp.Equal, 'c'],
+      ]);
     });
 
     it('should perform a trivial deletion diff', () => {
-      expect(dmp.diff_main('a123bc', 'abc', false)).toEqual(
-        [[DiffOp.Equal, 'a'], [DiffOp.Delete, '123'], [DiffOp.Equal, 'bc']]);
+      expect(dmp.diff_main('a123bc', 'abc', false)).toEqual([
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, '123'],
+        [DiffOp.Equal, 'bc'],
+      ]);
     });
 
     it('should perform a double insertion diff', () => {
-      expect(dmp.diff_main('abc', 'a123b456c', false)).toEqual(
-        [
-          [DiffOp.Equal, 'a'],
-          [DiffOp.Insert, '123'],
-          [DiffOp.Equal, 'b'],
-          [DiffOp.Insert, '456'],
-          [DiffOp.Equal, 'c']
-        ]);
+      expect(dmp.diff_main('abc', 'a123b456c', false)).toEqual([
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Insert, '123'],
+        [DiffOp.Equal, 'b'],
+        [DiffOp.Insert, '456'],
+        [DiffOp.Equal, 'c'],
+      ]);
     });
 
     it('should perform a double deletion diff', () => {
-      expect(dmp.diff_main('a123b456c', 'abc', false)).toEqual(
-        [
-          [DiffOp.Equal, 'a'],
-          [DiffOp.Delete, '123'],
-          [DiffOp.Equal, 'b'],
-          [DiffOp.Delete, '456'],
-          [DiffOp.Equal, 'c']
-        ]);
+      expect(dmp.diff_main('a123b456c', 'abc', false)).toEqual([
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, '123'],
+        [DiffOp.Equal, 'b'],
+        [DiffOp.Delete, '456'],
+        [DiffOp.Equal, 'c'],
+      ]);
     });
 
     it('should perform a simple diff', () => {
       dmp.Diff_Timeout = 0;
-      expect(dmp.diff_main('a', 'b', false)).toEqual([[DiffOp.Delete, 'a'], [DiffOp.Insert, 'b']]);
+      expect(dmp.diff_main('a', 'b', false)).toEqual([
+        [DiffOp.Delete, 'a'],
+        [DiffOp.Insert, 'b'],
+      ]);
     });
 
     it('should perform a sentence diff', () => {
-      expect(dmp.diff_main('Apples are a fruit.', 'Bananas are also fruit.', false)).toEqual(
-        [
-          [DiffOp.Delete, 'Apple'],
-          [DiffOp.Insert, 'Banana'],
-          [DiffOp.Equal, 's are a'],
-          [DiffOp.Insert, 'lso'],
-          [DiffOp.Equal, ' fruit.']
-        ]);
+      expect(
+        dmp.diff_main('Apples are a fruit.', 'Bananas are also fruit.', false),
+      ).toEqual([
+        [DiffOp.Delete, 'Apple'],
+        [DiffOp.Insert, 'Banana'],
+        [DiffOp.Equal, 's are a'],
+        [DiffOp.Insert, 'lso'],
+        [DiffOp.Equal, ' fruit.'],
+      ]);
     });
 
     it('should perform a simple diff', () => {
-      expect(dmp.diff_main('ax\t', '\u0680x\0', false)).toEqual(
-        [
-          [DiffOp.Delete, 'a'],
-          [DiffOp.Insert, '\u0680'],
-          [DiffOp.Equal, 'x'],
-          [DiffOp.Delete, '\t'],
-          [DiffOp.Insert, '\0']
-        ]);
+      expect(dmp.diff_main('ax\t', '\u0680x\0', false)).toEqual([
+        [DiffOp.Delete, 'a'],
+        [DiffOp.Insert, '\u0680'],
+        [DiffOp.Equal, 'x'],
+        [DiffOp.Delete, '\t'],
+        [DiffOp.Insert, '\0'],
+      ]);
     });
 
     it('should perform diff with overlap', () => {
-      expect(dmp.diff_main('1ayb2', 'abxab', false)).toEqual(
-        [
-          [DiffOp.Delete, '1'],
-          [DiffOp.Equal, 'a'],
-          [DiffOp.Delete, 'y'],
-          [DiffOp.Equal, 'b'],
-          [DiffOp.Delete, '2'],
-          [DiffOp.Insert, 'xab']
-        ]);
+      expect(dmp.diff_main('1ayb2', 'abxab', false)).toEqual([
+        [DiffOp.Delete, '1'],
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, 'y'],
+        [DiffOp.Equal, 'b'],
+        [DiffOp.Delete, '2'],
+        [DiffOp.Insert, 'xab'],
+      ]);
     });
 
     it('should perform a diff with a large insertion', () => {
-      expect(dmp.diff_main('abcy', 'xaxcxabc', false)).toEqual(
-        [
-          [DiffOp.Insert, 'xaxcx'],
-          [DiffOp.Equal, 'abc'],
-          [DiffOp.Delete, 'y']
-        ]);
+      expect(dmp.diff_main('abcy', 'xaxcxabc', false)).toEqual([
+        [DiffOp.Insert, 'xaxcx'],
+        [DiffOp.Equal, 'abc'],
+        [DiffOp.Delete, 'y'],
+      ]);
     });
 
     it('should perform a diff with a large deletion', () => {
-      expect(dmp.diff_main('ABCDa=bcd=efghijklmnopqrsEFGHIJKLMNOefg', 'a-bcd-efghijklmnopqrs', false)).toEqual(
-        [
-          [DiffOp.Delete, 'ABCD'],
-          [DiffOp.Equal, 'a'],
-          [DiffOp.Delete, '='],
-          [DiffOp.Insert, '-'],
-          [DiffOp.Equal, 'bcd'],
-          [DiffOp.Delete, '='],
-          [DiffOp.Insert, '-'],
-          [DiffOp.Equal, 'efghijklmnopqrs'],
-          [DiffOp.Delete, 'EFGHIJKLMNOefg']
-        ]);
+      expect(
+        dmp.diff_main(
+          'ABCDa=bcd=efghijklmnopqrsEFGHIJKLMNOefg',
+          'a-bcd-efghijklmnopqrs',
+          false,
+        ),
+      ).toEqual([
+        [DiffOp.Delete, 'ABCD'],
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Delete, '='],
+        [DiffOp.Insert, '-'],
+        [DiffOp.Equal, 'bcd'],
+        [DiffOp.Delete, '='],
+        [DiffOp.Insert, '-'],
+        [DiffOp.Equal, 'efghijklmnopqrs'],
+        [DiffOp.Delete, 'EFGHIJKLMNOefg'],
+      ]);
     });
 
     it('should perform a diff with a large equality', () => {
-      expect(dmp.diff_main('a [[Pennsylvania]] and [[New', ' and [[Pennsylvania]]', false)).toEqual(
-        [
-          [DiffOp.Insert, ' '],
-          [DiffOp.Equal, 'a'],
-          [DiffOp.Insert, 'nd'],
-          [DiffOp.Equal, ' [[Pennsylvania]]'],
-          [DiffOp.Delete, ' and [[New']
-        ]);
+      expect(
+        dmp.diff_main(
+          'a [[Pennsylvania]] and [[New',
+          ' and [[Pennsylvania]]',
+          false,
+        ),
+      ).toEqual([
+        [DiffOp.Insert, ' '],
+        [DiffOp.Equal, 'a'],
+        [DiffOp.Insert, 'nd'],
+        [DiffOp.Equal, ' [[Pennsylvania]]'],
+        [DiffOp.Delete, ' and [[New'],
+      ]);
     });
 
     it('should apply timeout if configured', () => {
       // Timeout.
-      dmp.Diff_Timeout = 0.1;  // 100ms
+      dmp.Diff_Timeout = 0.1; // 100ms
 
-      let a = '`Twas brillig, and the slithy toves\nDid gyre and gimble in the wabe:\n' +
+      let a =
+        '`Twas brillig, and the slithy toves\nDid gyre and gimble in the wabe:\n' +
         'All mimsy were the borogoves,\nAnd the mome raths outgrabe.\n';
 
-      let b = 'I am the very model of a modern major general,\nI\'ve information vegetable, animal, and mineral,\n' +
+      let b =
+        "I am the very model of a modern major general,\nI've information vegetable, animal, and mineral,\n" +
         'I know the kings of England, and I quote the fights historical,\n' +
         'From Marathon to Waterloo, in order categorical.\n';
 
@@ -329,9 +406,9 @@ describe('DiffMatchPatch', () => {
         b = b + b;
       }
 
-      const startTime = (new Date()).getTime();
+      const startTime = new Date().getTime();
       dmp.diff_main(a, b);
-      const endTime = (new Date()).getTime();
+      const endTime = new Date().getTime();
       // Test that we took at least the timeout period.
       expect(endTime - startTime).toBeGreaterThan(dmp.Diff_Timeout * 1000);
 
@@ -348,17 +425,21 @@ describe('DiffMatchPatch', () => {
 
     it('should use linemode speedup for simple line-mode', () => {
       // Must be long to pass the 100 char cutoff.
-      const a = '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n' +
+      const a =
+        '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n' +
         '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n';
-      const b = 'abcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\n' +
+      const b =
+        'abcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\n' +
         'abcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\nabcdefghij\n';
       expect(dmp.diff_main(a, b, false)).toEqual(dmp.diff_main(a, b, true));
     });
 
     it('should use linemode speedup for single line-mode', () => {
-      const a = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345' +
+      const a =
+        '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345' +
         '678901234567890123456789012345678901234567890';
-      const b = 'abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde' +
+      const b =
+        'abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde' +
         'fghijabcdefghijabcdefghijabcdefghijabcdefghij';
       expect(dmp.diff_main(a, b, false)).toEqual(dmp.diff_main(a, b, true));
     });
@@ -380,9 +461,11 @@ describe('DiffMatchPatch', () => {
       }
 
       // Overlap line-mode.
-      const a = '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n' +
+      const a =
+        '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n' +
         '1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n1234567890\n';
-      const b = 'abcdefghij\n1234567890\n1234567890\n1234567890\nabcdefghij\n1234567890\n1234567890\n' +
+      const b =
+        'abcdefghij\n1234567890\n1234567890\n1234567890\nabcdefghij\n1234567890\n1234567890\n' +
         '1234567890\nabcdefghij\n1234567890\n1234567890\n1234567890\nabcdefghij\n';
       const texts_linemode = diff_rebuildtexts(dmp.diff_main(a, b, true));
       const texts_textmode = diff_rebuildtexts(dmp.diff_main(a, b, false));
@@ -390,7 +473,7 @@ describe('DiffMatchPatch', () => {
     });
 
     it('should throw exception on null input', () => {
-      expect(() => dmp.diff_main(null, null)).toThrow();
+      expect(() => dmp.diff_main(null!, null!)).toThrow();
     });
   });
 });
