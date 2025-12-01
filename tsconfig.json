@@ -3,10 +3,11 @@
     "target": "es6",
     "module": "esnext",
     "moduleResolution": "node",
+    "strict": true,
     "declaration": true,
     "outDir": "./dist",
-    "noImplicitAny": true,
     "lib": ["es6"]
   },
-  "files": ["./src/index.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
