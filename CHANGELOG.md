@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/rars/diff-match-patch-ts/compare/v0.8.0...v1.0.0) (2026-06-15)
+
+- Maintenance release updating dependencies. Setting version to 1.0.0.
+
 ## [0.8.0](https://github.com/rars/diff-match-patch-ts/compare/v0.7.0...v0.8.0) (2025-12-01)
 
 ### Refactoring

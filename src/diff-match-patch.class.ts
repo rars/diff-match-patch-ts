@@ -781,6 +781,8 @@ export class DiffMatchPatch {
           line = decodeURI(text[textPointer].substring(1));
         } catch (_ex) {
           // Malformed URI sequence.
+          // TODO: remove this lint suppression once _ex is added as cause after updating target to es2022
+          // eslint-disable-next-line preserve-caught-error
           throw new Error('Illegal escape in patch_fromText: ' + line);
         }
         if (sign === '-') {
@@ -1882,6 +1884,8 @@ export class DiffMatchPatch {
             diffs[diffsLength++] = [DiffOp.Insert, decodeURI(param)];
           } catch (_ex) {
             // Malformed URI sequence.
+            // TODO: remove this lint rule suppression once cause is added and target is es2022.
+            // eslint-disable-next-line preserve-caught-error
             throw new Error('Illegal escape in diff_fromDelta: ' + param);
           }
           break;
