@@ -1456,10 +1456,7 @@ export class DiffMatchPatch {
       const line = text.substring(lineStart, lineEnd + 1);
       lineStart = lineEnd + 1;
 
-      if (
-        Object.prototype.hasOwnProperty.call(lineHash, line) ||
-        lineHash[line] !== undefined
-      ) {
+      if (Object.hasOwn(lineHash, line) || lineHash[line] !== undefined) {
         chars += String.fromCharCode(lineHash[line]);
       } else {
         chars += String.fromCharCode(lineArrayLength);
