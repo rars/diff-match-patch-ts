@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.0](https://github.com/rars/diff-match-patch-ts/compare/v1.0.0...v2.0.0-beta.0) (2026-06-16)
+
+
+### Features
+
+* **diff-match-patch-ts:** target es2022 and use TypeScript 6 ([c54abf1](https://github.com/rars/diff-match-patch-ts/commit/c54abf134690737b620ed67265dd817211041fd3))
+
 ## [1.0.0](https://github.com/rars/diff-match-patch-ts/compare/v0.8.0...v1.0.0) (2026-06-15)
 
 - Maintenance release updating dependencies. Setting version to 1.0.0.
