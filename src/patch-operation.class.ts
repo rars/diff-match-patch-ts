@@ -28,6 +28,22 @@
 import { DiffOp } from './diff-op.enum';
 import { Diff } from './diff.type';
 
+const OP_SYMBOLS: Record<DiffOp, string> = {
+  [DiffOp.Insert]: '+',
+  [DiffOp.Delete]: '-',
+  [DiffOp.Equal]: ' ',
+};
+
+const formatCoords = (start: number, length: number): string => {
+  if (length === 0) {
+    return start + ',0';
+  } else if (length === 1) {
+    return `${start + 1}`;
+  }
+
+  return `${start + 1},${length}`;
+};
+
 /**
  * Class representing one patch operation.
  * @constructor
@@ -45,10 +61,7 @@ export class PatchOperation {
   public clone(): PatchOperation {
     const patchCopy = new PatchOperation(this.start1, this.start2);
 
-    patchCopy.diffs = [];
-    for (let i = 0; i < this.diffs.length; i++) {
-      patchCopy.diffs[i] = [this.diffs[i][0], this.diffs[i][1]];
-    }
+    patchCopy.diffs = this.diffs.map((diff) => [...diff] as Diff);
 
     patchCopy.length1 = this.length1;
     patchCopy.length2 = this.length2;
@@ -62,39 +75,17 @@ export class PatchOperation {
    * Indicies are printed as 1-based, not 0-based.
    */
   public toString(): string {
-    let coords1: string | number;
-    let coords2: string | number;
-    if (this.length1 === 0) {
-      coords1 = this.start1 + ',0';
-    } else if (this.length1 === 1) {
-      coords1 = this.start1 + 1;
-    } else {
-      coords1 = `${this.start1 + 1},${this.length1}`;
-    }
-    if (this.length2 === 0) {
-      coords2 = this.start2 + ',0';
-    } else if (this.length2 === 1) {
-      coords2 = this.start2 + 1;
-    } else {
-      coords2 = `${this.start2 + 1},${this.length2}`;
-    }
+    const coords1 = formatCoords(this.start1, this.length1);
+    const coords2 = formatCoords(this.start2, this.length2);
+
     const text = [`@@ -${coords1} +${coords2} @@\n`];
-    let op;
+
     // Escape the body of the patch with %xx notation.
-    for (let x = 0; x < this.diffs.length; x++) {
-      switch (this.diffs[x][0]) {
-        case DiffOp.Insert:
-          op = '+';
-          break;
-        case DiffOp.Delete:
-          op = '-';
-          break;
-        case DiffOp.Equal:
-          op = ' ';
-          break;
-      }
-      text[x + 1] = op + encodeURI(this.diffs[x][1]) + '\n';
+    for (const diff of this.diffs) {
+      const op = OP_SYMBOLS[diff[0]];
+      text.push(op + encodeURI(diff[1]) + '\n');
     }
+
     return text.join('').replace(/%20/g, ' ');
   }
 }
